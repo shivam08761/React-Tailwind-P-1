@@ -1,7 +1,8 @@
 import React from 'react'
-import style from "./Read.module.css"
+import {toast} from 'react-toastify'
+
 const Read = (props) => {
-    console.log(style);
+    
     const todos = props.todos;
     const settodos = props.settodos;
 
@@ -12,6 +13,8 @@ const Read = (props) => {
     const filtertodos = todos.filter((todo) => todo.id != id);
     
     settodos(filtertodos);
+
+    toast.error("todo deleted successfully");
 
      
   };

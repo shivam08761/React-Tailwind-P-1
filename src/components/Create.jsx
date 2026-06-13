@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 import { nanoid} from 'nanoid'
-
+import { useForm } from 'react-hook-form'
+import {toast} from 'react-toastify'
 
 const Create = (props) => {
    
@@ -12,35 +13,53 @@ const Create = (props) => {
 
     const todos = props.todos;
     const settodos = props.settodos;
+    const {
+      register,
+      handleSubmit,
+      reset,
+      formState:{errors},
+
+    } = useForm();
 
 
 
-      const [title,settitle] = useState("");
-       const [iscompleted,setiscompleted] = useState();
-      const submithandler = (e) => {
-              e.preventDefault();
-              const newtodos= {
-                id: nanoid(),
-                title,
-                iscompleted,
-              };
+      // const [title,settitle] = useState("");
+      //  const [iscompleted,setiscompleted] = useState();
+      const submithandler = (data) => {
+              
+            data.iscompleted = false;
+            data.id = nanoid();
             
-          let copytodos= [...todos];
-          copytodos.push(newtodos);
-          settodos(copytodos);
 
-          settitle("");
-          setiscompleted(false);
-            }
+            const copytodos = [...todos];
+            copytodos.push(data);
+            settodos(copytodos);
+
+               toast.success("todo created successfully");
+
+            reset();
+          // let copytodos= [...todos];
+          // copytodos.push(newtodos);
+          // settodos(copytodos);
+
+          // settitle("");
+          // setiscompleted(false);
+            
+          };
+        
    
 
 
   return (
     <div className='w-[60%]  p-20 m-10 '>
          <h1 className='text-6xl font-thin ' >Set <span className='text-red-500' > Reminder</span> for <br /> {" "}Tasks</h1> 
-            <form  onSubmit={submithandler}>
+            <form  onSubmit={handleSubmit(submithandler)}>
               
-                <input className='p-2 border-b outline-0 py-1 mt-15 font-thin w-full text-3xl' onChange={(e)=>settitle((e.target.value))} value={title} type="text" placeholder="title"/>
+                <input 
+                {...register("title", {required: "title is required"})}
+                className='p-2 border-b outline-0 py-1 mt-15 font-thin w-full text-3xl' type="text" placeholder="title"/>
+                 <small className='text-red-400'>{errors?.title?.message}</small>
+               
                 <br/>
                <br/>
                 
